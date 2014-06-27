@@ -1,4 +1,12 @@
-#ubuntu desktop install
+#NAS System on Ubuntu Server
+
+###PROLOGUE
+
+NAS 솔루션으로 Opensouce기반의 대표적인 제품은 Pydio가 있다. 기존 상용 NAS제품에도 번들형태로 포함되어 있으며 개인적으로 Linux 서버를 구성 후 설치하는 것이 가능하다. 
+
+단 대용량의 파일을 upload/download 하기위해서는 OS의 버젼과 내부 설정이 필요하며 단일시스템이 아닌 가상머신에서 운용하기 위해서는 이에 대한 이해가 필요하다.
+
+###ubuntu desktop install
 기본적으로 Host PC 위의 VMware 에 설치를 하는 환경이다. 
 32bit. 또는 64bit 어떤 ubuntu OS를 설치할 것인가? VM에 메모리 할당을 3G정도 가능하다면 64bit로 설치하자. 특히 PHP기반의 웹하드 App(Pydio)등을 사용한다면 2G이상의 파일을 업로드/다운로드다운로드하기 위해서는 64bit 설치가 필요하다.
 
