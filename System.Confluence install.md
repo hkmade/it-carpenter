@@ -1,18 +1,92 @@
-#NAS System on Ubuntu Server
+#Confluence System install on Ubuntu Server
 
 ##PROLOGUE
-NAS는 용어에서 보듯 네트웍으로 연결된 스토리지를 말한다. 우리에게는 웹하드라는 서비스로 익히 알려져 있는 시스템이다. 
-NAS 솔루션으로 Opensouce기반의 대표적인 제품은 Pydio가 있다. 다시 말하자면 공짜솔루션이라는 말이다. (하지만 그만큼 설정과 운영은 스스로에게 책임과 권한이 부여된다)  기존 상용 NAS제품에도 번들형태로 포함되어 있으며 일반적으로 Linux 서버를 구성한후 여기에 Pydio를 설정한다.  
+confluence은 간단히 말해 유료 WIKI라고 할수 있다.
+Ubuntu Server를 구축한 후 이 confluence를 설정한다. 
+이 제품은  Attlassian 사에서 만드는 여러 모듈중 하나이며 
+자체 Host에 설치를 할수 있고 Atlassian의 웹호스팅으로도 서비스가 가능하다.
 
-단 대용량의 파일을 upload/download 하기위해서는 OS의 버젼과 내부 설정이 필요하며 가상환경에서 Linux 머신을 운용하는 경우 가상환경에 대한 설정과 이해가 필요하다.
+여기서는 자체적으로 Ubuntu System을 구축하고 confluence를 구축하는 가이드이다.
 
-###Virutal Environment
-개인 PC(or Notebook)에서 리눅스머신을 운용하는 환경은 가상머신이 매우 편리하다. 특히 OS의 설치 후 변경 사항에 대한 저장과 복원이 매우 편리하기 때문에 Vmware 나 VirtualBox등의 가상머신의 환경이 꼭 필수적이다. 
+###Host Server 설치용 준비
+우선 필요한 모듈은 아래와 같다.
+JIRA (모든 것을 추적할수 있는 Traking tool이다. 이슈들을 확인하고 정렬하고 일을 할당하고 팀의 활동을 모두 추적할수 있다.
+JIRA Service Desk : IT팀을 위한 서비스와 지원
 
-하지만 이러한 가상머신환경에서 NAS System을 운영하는 경우 가상머신을 운영하는 PC의 디렉토리와 가상머신이 연결되어야 하는데 여기서 문제가 발생할 확률이 높다. 잘 설정되어  가상머신에서 공유디렉토리 방식으로 PC의 디렉토리와의 접근이 잘 되기도 하지만 그렇지 않은 경우 가상머신의 OS를 재설치해야 할 수도 있다. 
+Confluence : 팀원들끼리 공유, 찾기 협업을 할수 있는 one place 공간 제공 
+ free trial 30 days 
+ Confluence 5.5.3 Linux installer 64bit, Standalone tar.gz
+ 
+Confluence Team Calendars : 사람들과 프로젝트와 이벤트를 할당
 
-###개인용NAS 시스템을 설치하기 위한 준비
-**Host PC or Notebook**  
+우선 평가용으로는 설치본중에서 installer방식을 선택한다.
+Linux installer 64bit를 다운로드후 서버에 FTP로 업로드
+
+
+	root@ubuntu:/tmp# chmod 755 *.bin
+	root@ubuntu:/tmp# ls -la
+	total 242864
+	drwxrwxrwt  4 root  root       4096  7월  7 19:36 .
+	drwxr-xr-x 22 root  root       4096  6월 27 16:09 ..
+	drwxrwxrwt  2 root  root       4096  7월  3 21:52 VMwareDnD
+	-rwxr-xr-x  1 miles miles 248669354  7월  7 19:46 atlassian-confluence-5.5.3-x64.bin
+	drwx------  2 root  root       4096  7월  3 21:52 vmware-root
+	root@ubuntu:/tmp# 
+
+	root@ubuntu:/tmp# ./atlassian-confluence-5.5.3-x64.bin
+	Unpacking JRE ...
+	Starting Installer ...
+	7월 07, 2014 3:59:10 오전 java.util.prefs.FileSystemPreferences$1 run
+	INFO: Created user preferences directory.
+	7월 07, 2014 3:59:10 오전 java.util.prefs.FileSystemPreferences$2 run
+	INFO: Created system preferences directory in java.home.
+	
+	This will install Confluence 5.5.3 on your computer.
+	OK [o, Enter], Cancel [c]
+	o
+	Choose the appropriate installation or upgrade option.
+	Please choose one of the following:
+	Express Install (uses default settings) [1], Custom Install (recommended for advanced users) [2, Enter], Upgrade an existing Confluence installation [3]
+	1         
+	See where Confluence will be installed and the settings that will be used.
+	Installation Directory: /opt/atlassian/confluence 
+	Home Directory: /var/atlassian/application-data/confluence 
+	HTTP Port: 8090 
+	RMI Port: 8000 
+	Install as service: Yes 
+	Install [i, Enter], Exit [e]
+	i 
+	
+	Extracting files ...
+	
+	Please wait a few moments while Confluence starts up.
+	Launching Confluence ...
+	Installation of Confluence 5.5.3 is complete
+	Your installation of Confluence 5.5.3 is now ready and can be accessed via
+	your browser.
+	Confluence 5.5.3 can be accessed at http://localhost:8090
+	Finishing installation ...
+	root@ubuntu:/tmp# ls
+	VMwareDnD  atlassian-confluence-5.5.3-x64.bin  hsperfdata_confluence  hsperfdata_root  vmware-root
+
+이제 평가판 설치가 완료되었고 웹브라우저로 접근한다.  
+`http://ip:8090` 
+
+접속후 WEB브라우저에서  Trial Installation을 선택한다. 
+
+
+평가용을 선택하고 my.atlassian.com의 가입한 계정을 입력한다. 
+
+Specify your license key에서 I have a key를 선택하고 
+Server ID를 확인 한 후 홈페이지에서 License key를 생성한다.
+
+
+
+
+
+
+
+
 가상머신을 설치하여 운영할  시스템이다.  가능하다면 가상머신이 설치되는 파티션은 SSD로 운영하는 것이 가상머신의 백업,복원등의 속도적인 이점을 누릴수 있다. 
 메모리는 최소한 4G 이상 8G를 추천한다. 
 
@@ -27,6 +101,14 @@ Vmware의 vplayer도 가능하지만 실시간 snapshot 과 restore를 위해서
 
 **NAS에서 서비스할 데이터파일**
 일반적으로 Host PC에 USB등의 매체를 통해 연결하는 외장형 HDD or 스토리지가 여기에 해당한다. 이 문서에서는 USB2.0으로 연결된 외장형 HDD 를 이용한다.
+
+
+###데모라이센스
+90일간 사용할수 있는 데모라이센스를 발급받을 수 있는데. 이것은 우선 설치 후에 설치 wizard나 실행 후 자체 프로그램이 인식하는 SERVER ID가 필요하다.
+https://my.atlassian.com/license/evaluation
+해당 사이트는 로그인이 필요하다. (회원가입은 FREE)
+
+
 
 
 ##VMware Install
